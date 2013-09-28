@@ -12,7 +12,7 @@ class NonPersonnalizedRecommenderSuite extends FunSuite {
         getClass().getResource("/module1/recsys-data-users.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-ratings.csv").getPath(), 
         11, true)
-    assert(actual === Array((603, 0.96), (1891, 0.94), (1892, 0.94), (120, 0.93), (1894, 0.93)))    
+    assert(actual === Array((603, 0.96), (1892, 0.94), (1891, 0.94), (120, 0.93), (1894, 0.93)))    
   }
   
   test("simple with movie 121") {
@@ -30,12 +30,12 @@ class NonPersonnalizedRecommenderSuite extends FunSuite {
         getClass().getResource("/module1/recsys-data-users.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-ratings.csv").getPath(), 
         8587, true)
-    assert(actual === Array((603,0.92),(597,0.90),(607,0.87),(13,0.86),(120,0.86)))    
+    assert(actual === Array((603,0.92),(597,0.90),(607,0.87),(120,0.86),(13,0.86)))    
   }
   
   test("Deliverable1")
   {
-    NonPersonnalizedRecommender.simpleRecommenderDeliverable
+    NonPersonnalizedRecommender.simpleRecommenderDeliverable(280, 585, 680)
   }
   
   test("advanced with movie 11") {
@@ -67,7 +67,7 @@ class NonPersonnalizedRecommenderSuite extends FunSuite {
   
   test("Deliverable2")
   {
-    NonPersonnalizedRecommender.advancedRecommenderDeliverable
+    NonPersonnalizedRecommender.advancedRecommenderDeliverable(280, 585, 680)
   }
 
 }

@@ -24,43 +24,46 @@ object NonPersonnalizedRecommender {
       val r = (rating.asDenseMatrix * ratings).toDenseVector.toArray.zipWithIndex.filterNot(x => x._2 == movies(movie))
       
       if (simple)
-        r.map(x => (invMovies(x._2), (x._1/BigDecimal(rating.sum)).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble)).sortBy(x => -1 * x._2).take(5)
+        r.map(x => (invMovies(x._2), (x._1/BigDecimal(rating.sum)))).sortBy(x => -1 * x._2).take(5).map(x => (x._1, x._2.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble))
       else
       {
         val nonRating = rating.map(x => if(x==1) 0 else 1)
         val nonR = (nonRating.asDenseMatrix * ratings).toDenseVector.toArray
-        r.map(x => (invMovies(x._2), ((x._1/BigDecimal(rating.sum))/(nonR(x._2)/BigDecimal(nonRating.sum))).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble)).sortBy(x => -1 * x._2).take(5)
+        val total = r.map(x => (invMovies(x._2), ((x._1/BigDecimal(rating.sum))/(nonR(x._2)/BigDecimal(nonRating.sum))))).sortBy(x => -1 * x._2).map(x => (x._1, x._2.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble))
+        val ttt= total.take(5)
+        //r.map(x => (invMovies(x._2), ((x._1/BigDecimal(rating.sum))/(nonR(x._2)/BigDecimal(nonRating.sum))).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble)).sortBy(x => -1 * x._2).take(5)
+        r.map(x => (invMovies(x._2), ((x._1/BigDecimal(rating.sum))/(nonR(x._2)/BigDecimal(nonRating.sum))))).sortBy(x => -1 * x._2).take(5).map(x => (x._1, x._2.setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble))
       }
       
   }
   
-  def simpleRecommenderDeliverable(){
-    recommenderDeliverable("simple_delivrable.txt", true)
+  def simpleRecommenderDeliverable(movie1 : Int, movie2 : Int, movie3 : Int){
+    recommenderDeliverable("simple_delivrable.txt", true, movie1, movie2, movie3)
   }
   
-  def advancedRecommenderDeliverable(){
-    recommenderDeliverable("advanced_delivrable.txt", false)
+  def advancedRecommenderDeliverable(movie1 : Int, movie2 : Int, movie3 : Int){
+    recommenderDeliverable("advanced_delivrable.txt", false, movie1, movie2, movie3)
   }
   
-  def recommenderDeliverable(fileName :String, simple : Boolean ){
+  def recommenderDeliverable(fileName :String, simple : Boolean, movie1 : Int, movie2 : Int, movie3 : Int ){
     val writer = new PrintWriter(new FileWriter("/projects/Coursera-IntroductionToRecommenderSystems/Module2/ProgrammingAssignment1/"+fileName))
-    val t =format(280, recommender(
+    val t =format(movie1, recommender(
         getClass().getResource("/module1/recsys-data-movie-titles.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-users.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-ratings.csv").getPath(), 
-        280, simple))
+        movie1, simple))
     writer.println(t)
-    writer.println(format(585, recommender(
+    writer.println(format(movie2, recommender(
         getClass().getResource("/module1/recsys-data-movie-titles.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-users.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-ratings.csv").getPath(), 
-        585, simple)))
+        movie2, simple)))
         
-    writer.println(format(680, recommender(
+    writer.println(format(movie3, recommender(
         getClass().getResource("/module1/recsys-data-movie-titles.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-users.csv").getPath(), 
         getClass().getResource("/module1/recsys-data-ratings.csv").getPath(), 
-        680, simple)))
+        movie3, simple)))
         
     writer.close()
   }
